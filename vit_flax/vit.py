@@ -26,8 +26,8 @@ class ViT(nn.Module):
     :return:Classification output
     """
     x = nn.BatchNorm(x)
-    b, c, h, w = x.shape
-    patch = x#.reshape(b, c, h, w)
+    b, h, w, c = x.shape
+    patch = x.reshape(b, c, h, w)
     num_patches = (img_size // patch_size) ** 2
     patch = patch.reshape(b, (h*w)//(patch_size*patch_size), c*patch_size**2)
 
