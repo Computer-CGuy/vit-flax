@@ -25,8 +25,9 @@ class ViT(nn.Module):
 
     :return:Classification output
     """
-    b, h, w, c = x.shape
-    patch = x.reshape(b, c, h, w)
+    x = nn.BatchNorm(x)
+#     b, h, w, c = x.shape
+#     patch = x.reshape(b, c, h, w)
     num_patches = (img_size // patch_size) ** 2
     patch = patch.reshape(b, (h*w)//(patch_size*patch_size), c*patch_size**2)
 
@@ -39,7 +40,7 @@ class ViT(nn.Module):
     x = lax.concatenate([class_tokens, fc_embedding], dimension=1)
     x += pos_embedding
     x = Transformer(x, depth, num_heads, dense_dims[0])
-
+    x = nn.BatchNorm(x)
     x = x[:, 0]
     x = nn.Dense(x, dense_dims[1])
     x = nn.gelu(x)
